@@ -1,4 +1,4 @@
 bibjsontools
 ============
 
-Utilities for working with BibJSON
+Tools for working with [BibJSON](http://bibjson.org/).
