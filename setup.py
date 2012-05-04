@@ -8,7 +8,7 @@ setup(
     version='0.1',
     author='Ted Lawless',
     author_email='lawlesst@gmail.com',
-    long_description=reade('README'),
+    long_description=read('README'),
     packages=find_packages(),
     package_data={'bibjsonutils': ['test/data/*.*']},
 )
