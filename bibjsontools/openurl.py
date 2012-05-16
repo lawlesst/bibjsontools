@@ -146,6 +146,10 @@ class OpenURLParser(object):
                     elif v.startswith('info:pmid/'):
                         d['type'] = 'pmid'
                         d['id'] = v
+                    #Handle pubmed IDs coming in like this pmid:18539564
+                    elif v.startswith('pmid'):
+                        d['type'] = 'pmid'
+                        d['id'] = 'info:%s' % v.replace(':', '/')
                 #OCLC
                 elif (k == 'rfe_dat') and ('accessionnumber' in v):
                     d['type'] = 'oclc'
@@ -157,6 +161,7 @@ class OpenURLParser(object):
                 elif k == 'doi':
                     id['type'] = 'doi'
                     id['id'] = "doi:%s" % v
+
                 #If we found an id add it to the output.
                 if d['id']:
                     out.append(d)
@@ -330,7 +335,7 @@ class BibJSONToOpenURL(object):
         #By default we will treat unknowns as articles for now.
         if (btype == 'article') or (btype=='unknown'):
             out['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:journal'
-            out['rft.atitle'] = bib['title']
+            out['rft.atitle'] = bib.get('title', None)
             jrnl = bib.get('journal', {})
             out['rft.jtitle'] = jrnl.get('name')
             out['rft.stitle'] = jrnl.get('shortcode')
