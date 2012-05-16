@@ -183,6 +183,8 @@ class OpenURLParser(object):
         if self.type in ['article', 'inbook']:
             jtitle = self._find_key(['rft.jtitle',
                                      'jtitle',
+                                     'rft.btitle',
+                                     'btitle',
                                      'rft.title',
                                      'title'])
             if jtitle:
@@ -230,7 +232,9 @@ class OpenURLParser(object):
                         first = au.get('firstname', '')
                         name = "%s, %s" % (last, first.strip())
                         au['name'] = name.rstrip(', ')
-                    out.append(au)
+                    #Don't duplicate authors
+                    if au not in out:
+                        out.append(au)
         return out
 
     def pages(self):
@@ -287,7 +291,7 @@ class OpenURLParser(object):
             if not v:
                 del d[k]
         #add the original openurl
-        d['_openurl'] = self.query
+        d['_openurl'] = BibJSONToOpenURL(d).parse()
         return d
         
 def from_openurl(query):
@@ -325,23 +329,27 @@ class BibJSONToOpenURL(object):
         btype = bib['type']
         #By default we will treat unknowns as articles for now.
         if (btype == 'article') or (btype=='unknown'):
-            if btype == 'article':
-                out['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:journal'
-                out['rft.atitle'] = bib['title']
-                jrnl = bib.get('journal', {})
-                out['rft.title'] = jrnl.get('name')
-                out['rft.jtitle'] = out['rft.title']
-                out['rft.stitle'] = jrnl.get('shortcode')
+            out['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:journal'
+            out['rft.atitle'] = bib['title']
+            jrnl = bib.get('journal', {})
+            out['rft.jtitle'] = jrnl.get('name')
+            out['rft.stitle'] = jrnl.get('shortcode')
+            out['rft.genre'] = 'article'
         else:
             out['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:book'
             out['rft.btitle'] = bib['title']
             if bib['type'] == 'inbook':
                 out['rft.genre'] = 'bookitem'
+                jrnl = bib.get('journal', {})
+                out['rft.btitle'] = jrnl.get('name')
+                #For Illiad add as title
+                out['title'] = jrnl.get('name')
+                out['rft.atitle'] = bib['title']
 
         out['rfr_id'] = "info:sid/%s" % (bib.get('bul:rfr', ''))
 
         #Do the common attributes
-        out['rft.date'] = bib.get('year')
+        out['rft.date'] = bib.get('year', '')[:4]
         authors = bib.get('author', [])
         for auth in authors:
             full = auth.get('name')
@@ -374,6 +382,7 @@ class BibJSONToOpenURL(object):
                     out['rft_id'] = 'info:pmid/%s' % idt['id']
             elif idt['type'] == 'oclc':
                 out['rft_id'] = 'http://www.worldcat.org/oclc/%s' % idt['id']
+                #out['ESPNumber'] = idt['id']
         #Remove empty keys
         for k,v in out.items():
             if not v:
