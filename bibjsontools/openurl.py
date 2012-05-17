@@ -250,6 +250,8 @@ class OpenURLParser(object):
         d['author'] = self.authors()
         #Publisher
         d['publisher'] = self._find_key(['rft.pub', 'pub'])
+        #Place - not sure how BibJSON would officially handle this
+        d['place_of_publication'] = self._find_key(['rft.place', 'place'])
         #Volume
         d['volume'] = self._find_key(['rft.volume', 'volume'])
         #Issue
@@ -312,6 +314,7 @@ class BibJSONToOpenURL(object):
         else:
             out['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:book'
             out['rft.btitle'] = bib.get('title')
+            out['rft.genre'] = 'book'
             if bib['type'] == 'inbook':
                 out['rft.genre'] = 'bookitem'
                 jrnl = bib.get('journal', {})
@@ -337,6 +340,8 @@ class BibJSONToOpenURL(object):
         out['rft.spage'] = bib.get('start_page')
         out['rft.end_page'] = bib.get('end_page')
         out['rft.pages'] = bib.get('pages')
+        out['rft.pub'] = bib.get('publisher')
+        out['rft.place'] = bib.get('place_of_publication')
         identifiers = bib.get('identifier', [])
         for idt in identifiers:
             if idt['type'] == 'issn':
