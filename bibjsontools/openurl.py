@@ -117,11 +117,11 @@ class OpenURLParser(object):
                 #    d['id'] = v.replace('<accessionnumber>', '').replace('</accessionnumber>', '')
                 #Other ids from the wild
                 elif k == 'pmid':
-                    id['type'] = 'pmid'
-                    id['id'] = v
+                    d['type'] = 'pmid'
+                    d['id'] = v
                 elif k == 'doi':
-                    id['type'] = 'doi'
-                    id['id'] = "doi:%s" % v
+                    d['type'] = 'doi'
+                    d['id'] = "doi:%s" % v
 
                 #If we found an id add it to the output.
                 if d['id']:
