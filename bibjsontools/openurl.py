@@ -112,9 +112,9 @@ class OpenURLParser(object):
                         d['type'] = 'pmid'
                         d['id'] = 'info:%s' % v.replace(':', '/')
                 #OCLC
-                elif (k == 'rfe_dat') and ('accessionnumber' in v):
-                    d['type'] = 'oclc'
-                    d['id'] = v.replace('<accessionnumber>', '').replace('</accessionnumber>', '')
+                #elif (((k == 'rfe_dat') or (k =='pid')) and ('accessionnumber' in v)):
+                #    d['type'] = 'oclc'
+                #    d['id'] = v.replace('<accessionnumber>', '').replace('</accessionnumber>', '')
                 #Other ids from the wild
                 elif k == 'pmid':
                     id['type'] = 'pmid'
@@ -136,6 +136,10 @@ class OpenURLParser(object):
         for eissn in self._find_repeating_key(['rft.eissn', 'eissn']):
             out.append({'type': 'eissn',
                         'id': issn})
+        #OCLCs
+        oclc = pull_oclc(self.data)
+        if (oclc) and (oclc not in out):
+            out.append({'type': 'oclc', 'id': oclc})
         return out
 
     def titles(self):
@@ -375,6 +379,14 @@ def pull_oclc(odict):
         match = oclc_reg.search(oclc)
         if match:
             oclc = match.group()
+            return oclc
+    #Try pid
+    spot = odict.get('pid', ['null'])[0]
+    if spot.rfind('accession') > -1:
+        match = oclc_reg.search(spot)
+        if match:
+            oclc = match.group()
+            return oclc
     return oclc
 
 def old_from_openurl(query):
