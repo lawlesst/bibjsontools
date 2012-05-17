@@ -149,8 +149,8 @@ class OpenURLParser(object):
                                        'atitle',
                                        'rft.btitle',
                                        'btitle'])
-        #Book titles could aslo be in title 
-        if (not out['title']) and (self.type == 'book'):
+        #Book titles and unknowns could also be in title 
+        if (not out['title']) and (self.type == 'book' or self.type == 'unknown'):
             out['title'] = self._find_key(['rft.title',
                                             'title'])
         #Journal title
@@ -304,14 +304,14 @@ class BibJSONToOpenURL(object):
         out['ctx_ver'] = 'Z39.88-2004'
         btype = bib['type']
         #By default we will treat unknowns as articles for now.
-        if (btype == 'article') or (btype=='unknown'):
+        if (btype == 'article'):
             out['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:journal'
             out['rft.atitle'] = bib.get('title', None)
             jrnl = bib.get('journal', {})
             out['rft.jtitle'] = jrnl.get('name')
             out['rft.stitle'] = jrnl.get('shortcode')
             out['rft.genre'] = 'article'
-        else:
+        elif (btype == 'book') or (btype == 'bookitem'):
             out['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:book'
             out['rft.btitle'] = bib.get('title')
             out['rft.genre'] = 'book'
@@ -322,6 +322,13 @@ class BibJSONToOpenURL(object):
                 #For Illiad add as title
                 out['title'] = jrnl.get('name')
                 out['rft.atitle'] = bib['title']
+        else:
+            #Try to fill in a title for unkowns
+            out['rft.genre'] = 'unknown'
+            out['rft.title'] = bib.get('title')
+            jrnl = bib.get('journal', {})
+            out['rft.jtitle'] = jrnl.get('name')
+            out['rft.stitle'] = jrnl.get('shortcode')
 
         out['rfr_id'] = "info:sid/%s" % (bib.get('bul:rfr', ''))
 
