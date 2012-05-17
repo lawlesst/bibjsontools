@@ -96,7 +96,7 @@ class TestFromOpenURL(unittest.TestCase):
         d = OpenURLParser(q)
         self.assertEqual(d.type, 'inbook')
 
- def suite():
+def suite():
     suite1 = unittest.makeSuite(TestFromOpenURL, 'test')
     return suite1
 
