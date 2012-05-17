@@ -7,45 +7,6 @@ import urlparse
 import sys
 import json
 
-def pull_oclc(odict):
-    """
-    Pull OCLC numbers from incoming FirstSearch/Worldcat urls.
-    """
-    import re
-    oclc_reg = re.compile('\d+')
-    oclc = None
-    if odict.get('rfr_id', ['null'])[0].rfind('firstsearch') > -1:
-        oclc = odict.get('rfe_dat', ['null'])[0]
-        match = oclc_reg.search(oclc)
-        if match:
-            oclc = match.group()
-    return oclc
-
-def initialize_id():
-    """
-    Helper to simply return dict with k,v that BibJSON expects.
-    """
-    d = {}
-    d['id'] = None
-    d['type'] = None
-    return d
-
-def pull_and_map(key_list, cite):
-    """
-    Given a list of keys and a dictionary.  Return the first found value.
-    """
-    for k in key_list:
-        val = cite.get(k, None)
-        if val:
-            return val[0].strip()
-    return
-
-
-class Common(object):
-    pass
-
-
-import urlparse
 class OpenURLParser(object):
 
     def __init__(self, openurl):
@@ -184,6 +145,10 @@ class OpenURLParser(object):
                                        'atitle',
                                        'rft.btitle',
                                        'btitle'])
+        #Book titles could aslo be in title 
+        if (not out['title']) and (self.type == 'book'):
+            out['title'] = self._find_key(['rft.title',
+                                            'title'])
         #Journal title
         if self.type in ['article', 'inbook']:
             jtitle = self._find_key(['rft.jtitle',
@@ -398,7 +363,19 @@ class BibJSONToOpenURL(object):
 
 
 
-
+def pull_oclc(odict):
+    """
+    Pull OCLC numbers from incoming FirstSearch/Worldcat urls.
+    """
+    import re
+    oclc_reg = re.compile('\d+')
+    oclc = None
+    if odict.get('rfr_id', ['null'])[0].rfind('firstsearch') > -1:
+        oclc = odict.get('rfe_dat', ['null'])[0]
+        match = oclc_reg.search(oclc)
+        if match:
+            oclc = match.group()
+    return oclc
 
 def old_from_openurl(query):
     """
