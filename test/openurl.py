@@ -1,3 +1,5 @@
+
+# -*- coding: utf-8 -*-
 import unittest
 from pprint import pprint
 
@@ -95,6 +97,13 @@ class TestFromOpenURL(unittest.TestCase):
         q = 'openurl=tions.com/?sid=info:sid/sersol:RefinerQuery&genre=bookitem&isbn=9780313358647&&title=The+handbook+of+near-death+experiences+%3A+thirty+years+of+investigation&atitle=Census+of+non-Western+near-death+experiences+to+2005%3A+Observations+and+critical+reflections.&volume=&part=&issue=&date=2009-01-01&spage=135&epage=158&aulast=Kellehear%2C+Allan&aufirst='
         d = OpenURLParser(q)
         self.assertEqual(d.type, 'inbook')
+
+    def test_symbols_in_title(self):
+        q = u"rft.title=Elective delivery at 34⁰(/)⁷ to 36⁶(/)⁷ weeks' gestation and its impact on neonatal outcomes in women with stable mild gestational hypertension&pmid=20934682&genre=journal"
+        #Just round trip to see if we raise encoding errors.
+        bib = from_openurl(q)
+        openurl = to_openurl(bib)
+        bib2 = from_openurl(openurl)
 
 def suite():
     suite1 = unittest.makeSuite(TestFromOpenURL, 'test')
