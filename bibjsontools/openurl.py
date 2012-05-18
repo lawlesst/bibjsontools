@@ -304,7 +304,10 @@ class BibJSONToOpenURL(object):
         out['ctx_ver'] = 'Z39.88-2004'
         btype = bib['type']
         #genric title
-        title = unicode(bib.get('title', ''), errors='ignore')
+        try:
+            title = unicode(bib.get('title', ''), errors='ignore')
+        except TypeError:
+            title = bib.get('title')
         #By default we will treat unknowns as articles for now.
         if (btype == 'article'):
             out['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:journal'
