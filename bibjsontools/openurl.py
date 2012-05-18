@@ -303,17 +303,19 @@ class BibJSONToOpenURL(object):
         out = {}
         out['ctx_ver'] = 'Z39.88-2004'
         btype = bib['type']
+        #genric title
+        title = unicode(bib.get('title', ''), errors='ignore')
         #By default we will treat unknowns as articles for now.
         if (btype == 'article'):
             out['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:journal'
-            out['rft.atitle'] = bib.get('title', None)
+            out['rft.atitle'] = title
             jrnl = bib.get('journal', {})
-            out['rft.jtitle'] = jrnl.get('name')
+            out['rft.jtitle'] = unicode(jrnl.get('name', ''), errors='ignore')
             out['rft.stitle'] = jrnl.get('shortcode')
             out['rft.genre'] = 'article'
         elif (btype == 'book') or (btype == 'bookitem'):
             out['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:book'
-            out['rft.btitle'] = bib.get('title')
+            out['rft.btitle'] = title
             out['rft.genre'] = 'book'
             if bib['type'] == 'inbook':
                 out['rft.genre'] = 'bookitem'
@@ -371,13 +373,11 @@ class BibJSONToOpenURL(object):
                 #out['ESPNumber'] = idt['id']
         #Remove empty keys
         for k,v in out.items():
-            if not v:
+            if (not v) or (v == ''):
                 del out[k]
         #from pprint import pprint
         #pprint(out)
-        #utf-8 encode everything.
-        o = dict([k, v.encode('utf-8')] for k, v in out.items())
-        return urllib.urlencode(o)
+        return urllib.urlencode(out)
 
 
 
