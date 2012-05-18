@@ -375,7 +375,9 @@ class BibJSONToOpenURL(object):
                 del out[k]
         #from pprint import pprint
         #pprint(out)
-        return urllib.urlencode(out)
+        #utf-8 encode everything.
+        o = dict([k, v.encode('utf-8')] for k, v in out.items())
+        return urllib.urlencode(o)
 
 
 
