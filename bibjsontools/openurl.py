@@ -71,6 +71,12 @@ class OpenURLParser(object):
             if genre == 'bookitem':
                 btype = 'inbook'
             else:
+                #Catch openurls where there is extra characters
+                #To do - switch to regex
+                if 'book' in genre:
+                    return 'book'
+                elif 'article' in genre:
+                    return 'article'
                 btype = genre
         else:
             #Try to guess based on incoming values.
@@ -249,7 +255,7 @@ class OpenURLParser(object):
         d.update(self.titles())
         d['author'] = self.authors()
         #Publisher
-        d['publisher'] = self._find_key(['rft.pub', 'pub'])
+        d['publisher'] = self._find_key(['rft.pub', 'pub', 'rft.publisher', 'publisher'])
         #Place - not sure how BibJSON would officially handle this
         d['place_of_publication'] = self._find_key(['rft.place', 'place'])
         #Volume

@@ -104,6 +104,14 @@ class TestFromOpenURL(unittest.TestCase):
         bib = from_openurl(q)
         openurl = to_openurl(bib)
         bib2 = from_openurl(openurl)
+        
+    def test_ugly_genre(self):
+        q = "genre=book\\"
+        bib = from_openurl(q)
+        self.assertEqual(bib['type'], 'book')
+        q = "genre=articleStuff"
+        bib = from_openurl(q)
+        self.assertEqual(bib['type'], 'article')
 
 def suite():
     suite1 = unittest.makeSuite(TestFromOpenURL, 'test')
