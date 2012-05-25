@@ -384,9 +384,11 @@ class BibJSONToOpenURL(object):
         for k,v in out.items():
             if (not v) or (v == ''):
                 del out[k]
-        #from pprint import pprint
-        #pprint(out)
-        return urllib.urlencode(out)
+        #Handle unicode.
+        new_out = {}
+        for k,v in out.iteritems():
+            new_out[k] = unicode(v).encode('utf-8')
+        return urllib.urlencode(new_out)
 
 
 
