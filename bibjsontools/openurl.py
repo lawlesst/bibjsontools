@@ -283,7 +283,6 @@ def from_openurl(query):
     b = OpenURLParser(query)
     return b.parse()
 
-
 class BibJSONToOpenURL(object):
     def __init__(self, bibjson):
         self.data = bibjson
@@ -381,9 +380,12 @@ class BibJSONToOpenURL(object):
             if (not v) or (v == ''):
                 del out[k]
         #Handle unicode.
+        #See - http://stackoverflow.com/questions/120951/how-can-i-normalize-a-url-in-python
         new_out = {}
         for k,v in out.iteritems():
-            new_out[k] = unicode(v).encode('utf-8')
+            if isinstance(v, unicode):
+                v = v.encode('utf-8', 'ignore')
+            new_out[k] = v
         return urllib.urlencode(new_out)
 
 
