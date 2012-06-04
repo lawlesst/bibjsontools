@@ -374,19 +374,21 @@ class BibJSONToOpenURL(object):
                     out['rft_id'] = 'info:pmid/%s' % idt['id']
             elif idt['type'] == 'oclc':
                 out['rft_id'] = 'http://www.worldcat.org/oclc/%s' % idt['id']
-                #out['ESPNumber'] = idt['id']
         #Remove empty keys
         for k,v in out.items():
             if (not v) or (v == ''):
                 del out[k]
-        #Handle unicode.
+        #Handle unicode and url quoting.
         #See - http://stackoverflow.com/questions/120951/how-can-i-normalize-a-url-in-python
-        new_out = {}
+        #http://stackoverflow.com/a/8152242
+        kevs = []
         for k,v in out.iteritems():
             if isinstance(v, unicode):
                 v = v.encode('utf-8', 'ignore')
-            new_out[k] = v
-        return urllib.urlencode(new_out)
+            _k = urllib.quote_plus(k, safe='/')
+            _v = urllib.quote_plus(v, safe='/')
+            kevs.append('%s=%s' % (_k, _v))
+        return '&'.join(kevs)
 
 
 
