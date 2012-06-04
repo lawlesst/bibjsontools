@@ -3,9 +3,8 @@
 bibj.py
 .project
 .pydevproject
+to_bibjson.py
 
-=======
->>>>>>> 53050d1841c8f5cfc5106141aafb79c3203be41e
 *.py[co]
 
 # Packages
