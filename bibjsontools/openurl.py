@@ -309,17 +309,13 @@ class BibJSONToOpenURL(object):
         out = {}
         out['ctx_ver'] = 'Z39.88-2004'
         btype = bib['type']
-        #genric title
-        try:
-            title = unicode(bib.get('title', ''), errors='ignore')
-        except TypeError:
-            title = bib.get('title')
+        title = bib.get('title')
         #By default we will treat unknowns as articles for now.
         if (btype == 'article'):
             out['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:journal'
             out['rft.atitle'] = title
             jrnl = bib.get('journal', {})
-            out['rft.jtitle'] = unicode(jrnl.get('name', ''), errors='ignore')
+            out['rft.jtitle'] = jrnl.get('name', '')
             out['rft.stitle'] = jrnl.get('shortcode')
             out['rft.genre'] = 'article'
         elif (btype == 'book') or (btype == 'bookitem'):
