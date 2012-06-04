@@ -1,5 +1,6 @@
 
 # -*- coding: utf-8 -*-
+import json
 import unittest
 from pprint import pprint
 
@@ -94,7 +95,7 @@ class TestFromOpenURL(unittest.TestCase):
         self.assertEqual(d.type, 'article')
 
     def test_bookitem_type(self):
-        q = 'openurl=tions.com/?sid=info:sid/sersol:RefinerQuery&genre=bookitem&isbn=9780313358647&&title=The+handbook+of+near-death+experiences+%3A+thirty+years+of+investigation&atitle=Census+of+non-Western+near-death+experiences+to+2005%3A+Observations+and+critical+reflections.&volume=&part=&issue=&date=2009-01-01&spage=135&epage=158&aulast=Kellehear%2C+Allan&aufirst='
+        q = u'openurl=tions.com/?sid=info:sid/sersol:RefinerQuery&genre=bookitem&isbn=9780313358647&&title=The+handbook+of+near-death+experiences+%3A+thirty+years+of+investigation&atitle=Census+of+non-Western+near-death+experiences+to+2005%3A+Observations+and+critical+reflections.&volume=&part=&issue=&date=2009-01-01&spage=135&epage=158&aulast=Kellehear%2C+Allan&aufirst='
         d = OpenURLParser(q)
         self.assertEqual(d.type, 'inbook')
 
@@ -112,6 +113,13 @@ class TestFromOpenURL(unittest.TestCase):
         q = "genre=articleStuff"
         bib = from_openurl(q)
         self.assertEqual(bib['type'], 'article')
+
+    def test_unicode_dump(self):
+        q = u'sid=FirstSearch%3AWorldCat&genre=book&isbn=9783835302334&title=Das+%22Orakel+der+Deisten%22+%3A+Shaftesbury+und+die+deutsche+Aufkl%E4rung&date=2008&aulast=Dehrmann&aufirst=Mark-Georg&id=doi%3A&pid=%3Caccession+number%3E228805805%3C%2Faccession+number%3E%3Cfssessid%3Efsapp2-53144-h2ja76oh-16awbl%3C%2Ffssessid%3E&url_ver=Z39.88-2004&rfr_id=info%3Asid%2Ffirstsearch.oclc.org%3AWorldCat&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&req_dat=%3Csessionid%3Efsapp2-53144-h2ja76oh-16awbl%3C%2Fsessionid%3E&rfe_dat=%3Caccessionnumber%3E228805805%3C%2Faccessionnumber%3E&rft_id=info%3Aoclcnum%2F228805805&rft_id=urn%3AISBN%3A9783835302334&rft.aulast=Dehrmann&rft.aufirst=Mark-Georg&rft.btitle=Das+%22Orakel+der+Deisten%22+%3A+Shaftesbury+und+die+deutsche+Aufkl%E4rung&rft.date=2008&rft.isbn=9783835302334&rft.place=G%F6ttingen&rft.pub=Wallstein'
+        bib = from_openurl(q)
+        b = json.dumps(bib, ensure_ascii=False)
+        nbib = json.loads(b)
+       
 
 def suite():
     suite1 = unittest.makeSuite(TestFromOpenURL, 'test')
