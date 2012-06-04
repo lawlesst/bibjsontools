@@ -115,11 +115,20 @@ class TestFromOpenURL(unittest.TestCase):
         self.assertEqual(bib['type'], 'article')
 
     def test_unicode_dump(self):
+        """
+        Make sure we can dump unicode as JSON.
+        """
         q = u'sid=FirstSearch%3AWorldCat&genre=book&isbn=9783835302334&title=Das+%22Orakel+der+Deisten%22+%3A+Shaftesbury+und+die+deutsche+Aufkl%E4rung&date=2008&aulast=Dehrmann&aufirst=Mark-Georg&id=doi%3A&pid=%3Caccession+number%3E228805805%3C%2Faccession+number%3E%3Cfssessid%3Efsapp2-53144-h2ja76oh-16awbl%3C%2Ffssessid%3E&url_ver=Z39.88-2004&rfr_id=info%3Asid%2Ffirstsearch.oclc.org%3AWorldCat&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&req_dat=%3Csessionid%3Efsapp2-53144-h2ja76oh-16awbl%3C%2Fsessionid%3E&rfe_dat=%3Caccessionnumber%3E228805805%3C%2Faccessionnumber%3E&rft_id=info%3Aoclcnum%2F228805805&rft_id=urn%3AISBN%3A9783835302334&rft.aulast=Dehrmann&rft.aufirst=Mark-Georg&rft.btitle=Das+%22Orakel+der+Deisten%22+%3A+Shaftesbury+und+die+deutsche+Aufkl%E4rung&rft.date=2008&rft.isbn=9783835302334&rft.place=G%F6ttingen&rft.pub=Wallstein'
         bib = from_openurl(q)
-        b = json.dumps(bib, ensure_ascii=False)
+        b = json.dumps(bib)
         nbib = json.loads(b)
-       
+        #another
+        q = u'sid=FirstSearch:WorldCat&genre=book&title=Staré písemné památky žen a dcer českých.&date=1869&aulast=Dvorský&aufirst=František&id=doi:&pid=<accession number>25990799</accession number><fssessid>0</fssessid>&url_ver=Z39.88-2004&rfr_id=info:sid/firstsearch.oclc.org:WorldCat&rft_val_fmt=info:ofi/fmt:kev:mtx:book&req_dat=<sessionid>0</sessionid>&rfe_dat=<accessionnumber>25990799</accessionnumber>&rft_id=info:oclcnum/25990799&rft.aulast=Dvorský&rft.aufirst=František&rft.btitle=Staré písemné památky žen a dcer českých.&rft.date=1869&rft.place=V Praze&rft.pub=V komisi F. Rivnače&rft.genre=book&checksum=5bf4eb1a523452dc7d25171146c4ebaa&title=Brown University&linktype=openurl&detail=RBN'
+        bib = from_openurl(q)
+        b = json.dumps(bib)
+        nbib = json.loads(b)
+        self.assertEqual(bib['title'], u'Staré písemné památky žen a dcer českých.')
+        self.assertEqual(nbib['title'], u'Staré písemné památky žen a dcer českých.')
 
 def suite():
     suite1 = unittest.makeSuite(TestFromOpenURL, 'test')
