@@ -10,15 +10,15 @@ import json
 class OpenURLParser(object):
 
     def __init__(self, openurl):
-	#Convert the incoming text to unicode.
-	#http://code.activestate.com/recipes/466341-guaranteed-conversion-to-unicode-or-byte-string/
-	if not isinstance(openurl, unicode):
-	    try:
-		openurl = unicode(openurl)
-	    except UnicodeDecodeError:
-		at = str(openurl).encode('string_escape')
-		openurl = unicode(at)
-	self.query = openurl
+        #Convert the incoming text to unicode.
+        #http://code.activestate.com/recipes/466341-guaranteed-conversion-to-unicode-or-byte-string/
+        if not isinstance(openurl, unicode):
+            try:
+                openurl = unicode(openurl)
+            except UnicodeDecodeError:
+                at = str(openurl).encode('string_escape')
+                openurl = unicode(at)
+        self.query = openurl
         self.data = urlparse.parse_qs(openurl)
 
     def _find_key(self, key_list, this_dict=None):
