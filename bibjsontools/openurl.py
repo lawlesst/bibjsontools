@@ -9,17 +9,12 @@ import json
 
 class OpenURLParser(object):
 
-    def __init__(self, openurl):
-        #Convert the incoming text to unicode.
-        #http://code.activestate.com/recipes/466341-guaranteed-conversion-to-unicode-or-byte-string/
-        if not isinstance(openurl, unicode):
-            try:
-                openurl = unicode(openurl)
-            except UnicodeDecodeError:
-                at = str(openurl).encode('string_escape')
-                openurl = unicode(at)
-        self.query = openurl
-        self.data = urlparse.parse_qs(openurl)
+    def __init__(self, openurl, query_dict=None):
+        if query_dict:
+            self.data = query_dict
+        else:
+            self.query = openurl
+            self.data = urlparse.parse_qs(openurl)
 
     def _find_key(self, key_list, this_dict=None):
         """
@@ -290,6 +285,14 @@ def from_openurl(query):
     """
     b = OpenURLParser(query)
     return b.parse()
+
+def from_dict(request_dict):
+    """
+    Alias/shortcut to handle dictionary inputs. 
+    Use for this is passing Django request.GET as dict.
+    """
+    b = OpenURLParser('', query_dict=request_dict)
+    return b.parse() 
 
 class BibJSONToOpenURL(object):
     def __init__(self, bibjson):
