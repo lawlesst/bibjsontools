@@ -423,6 +423,12 @@ def pull_oclc(odict):
         if match:
             oclc = match.group()
             return oclc
+    #rfe_dat - these are probably OCLC numbers in most cases.
+    dat = odict.get('rfe_dat')
+    if (dat) and ('accessionnumber' in dat[0]):
+        match = oclc_reg.search(dat[0])
+        if match:
+            return match.group()
     return oclc
 
 def old_from_openurl(query):

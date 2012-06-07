@@ -129,6 +129,12 @@ class TestFromOpenURL(unittest.TestCase):
         nbib = json.loads(b)
         self.assertEqual(bib['title'], u'Staré písemné památky žen a dcer českých.')
         self.assertEqual(nbib['title'], u'Staré písemné památky žen a dcer českých.')
+        
+    def test_oclc(self):
+        q = u'id=info:sid/Brown-Vufind&title=Reassembling the social : an introduction to actor-network-theory /&date=2005&genre=book&pub=Oxford University Press,&edition=&isbn=0199256047&rfe_dat=<accessionnumber>58054359</accessionnumber'
+        b = from_openurl(q)
+        ids = b.get('identifier')
+        self.assertTrue({'type': 'oclc', 'id': '58054359'} in ids)
 
 def suite():
     suite1 = unittest.makeSuite(TestFromOpenURL, 'test')
