@@ -242,6 +242,16 @@ class OpenURLParser(object):
         out['start_page'] = start
 
         return out
+    
+    def rfr(self):
+        """
+        Get the referring site.
+        """
+        #try the usual suspects
+        r = self._find_key(['rfr_id', 'sid', 'id'])
+        if r:
+            
+            return r
 
 
     def parse(self):
@@ -253,7 +263,7 @@ class OpenURLParser(object):
         d = {}
         d['type'] = self.type
         #Referrer
-        d['_rfr'] = self._find_key(['rfr_id', 'sid'])
+        d['_rfr'] = self.rfr()
         d['identifier'] = self.identifiers()
         d.update(self.titles())
         d['author'] = self.authors()

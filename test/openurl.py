@@ -135,6 +135,12 @@ class TestFromOpenURL(unittest.TestCase):
         b = from_openurl(q)
         ids = b.get('identifier')
         self.assertTrue({'type': 'oclc', 'id': '58054359'} in ids)
+        
+    def test_referrer(self):
+        q = u'id=info%3Asid%2FBrown-Vufind&title=Decolonization+%3A+perspectives+from+now+and+then+%2F&date=2004&genre=book&pub=Routledge%2C&edition=&isbn=0415248418&rfe_dat=%3Caccessionnumber%3E52458908%3C%2Faccessionnumber%3E'
+        b = from_openurl(q)
+        self.assertTrue(b['_rfr'],
+                        'info:sid/Brown-Vufind')
 
 def suite():
     suite1 = unittest.makeSuite(TestFromOpenURL, 'test')
