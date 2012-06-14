@@ -141,6 +141,11 @@ class TestFromOpenURL(unittest.TestCase):
         b = from_openurl(q)
         self.assertTrue(b['_rfr'],
                         'info:sid/Brown-Vufind')
+        
+    def test_unknown(self):
+        q = u'sid=FirstSearch:WorldCat&isbn=9781118257203&title=A companion to the anthropology of Europe&date=2012&aulast=Kockel&aufirst=Ullrich&id=doi:&pid=<accession number>784124222</accession number><fssessid>0</fssessid>&url_ver=Z39.88-2004&rfr_id=info:sid/firstsearch.oclc.org:WorldCat&rft_val_fmt=info:ofi/fmt:kev:mtx:book&req_dat=<sessionid>0</sessionid>&rfe_dat=<accessionnumber>784124222</accessionnumber>&rft_id=info:oclcnum/784124222&rft_id=urn:ISBN:9781118257203&rft.aulast=Kockel&rft.aufirst=Ullrich&rft.title=A companion to the anthropology of Europe&rft.date=2012&rft.isbn=9781118257203&rft.place=Chichester, West Sussex, UK ;;Malden, MA :&rft.pub=Wiley-Blackwell,&rft.genre=unknown'
+        b = from_openurl(q)
+        self.assertEqual(b['type'], 'book')
 
 def suite():
     suite1 = unittest.makeSuite(TestFromOpenURL, 'test')

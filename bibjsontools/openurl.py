@@ -60,15 +60,10 @@ class OpenURLParser(object):
     @property
     def type(self):
         """
-        Determine the type of citation.
+        Determine the type of citation.  Defaults to book.
         """
-        btype = 'unknown'
-        #Try the format first
-        fmt = self.data.get('rft_val_fmt', None)
-        #if fmt:
-            #if fmt =='info:ofi/fmt:kev:mtx:journal':
-            #    return 'article'
-            #elif fmt == 'info:/ofi:
+        #Defaulting to type of book.  
+        btype = 'book'
         genre = self._find_key(['rft.genre', 'genre'])
         if genre:
             if genre == 'bookitem':
@@ -80,7 +75,6 @@ class OpenURLParser(object):
                     return 'book'
                 elif 'article' in genre:
                     return 'article'
-                btype = genre
         else:
             #Try to guess based on incoming values.
             if self._find_key(['rft.atitle', 'atitle']):
