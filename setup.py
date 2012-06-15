@@ -3,6 +3,12 @@
 
 from setuptools import setup, find_packages
 
+install_requires = []
+try:
+    import json
+except ImportError:
+    install_requires.append('simplejson')
+
 setup(
     name='bibjsontools',
     version='0.1',
@@ -10,6 +16,7 @@ setup(
     author_email='lawlesst@gmail.com',
     packages=find_packages(),
     package_data={'bibjsontools': ['test/data/*.*']},
+    install_requires=install_requires,
 )
 
 
