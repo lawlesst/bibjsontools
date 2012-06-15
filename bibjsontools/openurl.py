@@ -5,7 +5,11 @@ Converting OpenURLs to BibJSON and back.
 import urllib
 import urlparse
 import sys
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 
 class OpenURLParser(object):
 
