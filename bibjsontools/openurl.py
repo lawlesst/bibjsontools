@@ -3,7 +3,10 @@ Converting OpenURLs to BibJSON and back.
 """
 
 import urllib
-import urlparse
+try:
+    from urlparse import parse_qs
+except:
+    from cgi import parse_qs
 import sys
 try:
     import json
@@ -18,7 +21,7 @@ class OpenURLParser(object):
             self.data = query_dict
         else:
             self.query = openurl
-            self.data = urlparse.parse_qs(openurl)
+            self.data = parse_qs(openurl)
 
     def _find_key(self, key_list, this_dict=None):
         """
