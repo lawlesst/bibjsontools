@@ -9,4 +9,10 @@ def suite():
     return test_suite
 
 runner = unittest.TextTestRunner()
-runner.run(suite())
+results = runner.run(suite())
+
+if results.wasSuccessful():
+    pass
+else:
+    raise Exception('Unit tests did not pass.  Check output.')
+
