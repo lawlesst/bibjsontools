@@ -72,6 +72,12 @@ class OpenURLParser(object):
         #Defaulting to type of book.  
         btype = 'book'
         genre = self._find_key(['rft.genre', 'genre'])
+        format = self._find_key(['rft_val_fmt'])
+        if format:
+            if 'journal' in format:
+                return 'article'
+            if 'book' in format:
+                return 'book'
         if genre:
             if genre == 'bookitem':
                 btype = 'inbook'
@@ -82,12 +88,11 @@ class OpenURLParser(object):
                     return 'book'
                 elif 'article' in genre:
                     return 'article'
-        else:
-            #Try to guess based on incoming values.
-            if self._find_key(['rft.atitle', 'atitle']):
-                btype = 'article'
-            elif self._find_key(['rft.btitle', 'btitle']):
-                btype = 'book'
+        #Try to guess based on incoming values.
+        elif self._find_key(['rft.atitle', 'atitle']):
+            btype = 'article'
+        elif self._find_key(['rft.btitle', 'btitle']):
+            btype = 'book'
         return btype
 
     def identifiers(self):
