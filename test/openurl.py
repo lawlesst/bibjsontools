@@ -155,7 +155,7 @@ class TestFromOpenURL(unittest.TestCase):
         q = u'ctx_ver=Z39.88-2004&amp;ctx_enc=info:ofi/enc:UTF-8&amp;rfr_id=info:sid/summon.serialssolutions.com&amp;rft_val_fmt=info:ofi/fmt:kev:mtx:journal&amp;rft.genre=news&amp;rft.atitle=The easy way to brighten your borders&amp;rft.jtitle=The Times&amp;rft.au=Joe Swift&amp;rft.date=2012-02-18&amp;rft.pub=NI Syndication Limited&amp;rft.issn=0140-0460&amp;rft.spage=14&amp;rft.externalDBID=n/a&amp;rft.externalDocID=280383175'
         b = from_openurl(q)
         self.assertEqual(b['type'], 'article')
-
+        
 def suite():
     suite1 = unittest.makeSuite(TestFromOpenURL, 'test')
     return suite1

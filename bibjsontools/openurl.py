@@ -240,10 +240,16 @@ class OpenURLParser(object):
                 #Default end_page is EOA - end of article
                 if not end:
                     end = 'EOA'
-                #Default end page to end of article
-                pages = "%s - %s" % (start, end)
-                out['pages'] = pages.strip()
-        
+            elif end:
+                #Default start page to ? if there is an end page.
+                start = '?'
+            else:
+                pass
+                #start = ''
+                #end = ''
+        if start and end:
+            pages = "%s - %s" % (start, end)
+            out['pages'] = pages.strip()
         out['end_page'] = end
         out['start_page'] = start
 
@@ -363,7 +369,7 @@ class BibJSONToOpenURL(object):
             out['rft.jtitle'] = jrnl.get('name')
             out['rft.stitle'] = jrnl.get('shortcode')
 
-        out['rfr_id'] = "info:sid/%s" % (bib.get('bul:rfr', ''))
+        out['rfr_id'] = "info:sid/%s" % (bib.get('_rfr', ''))
 
         #Do the common attributes
         out['rft.date'] = bib.get('year', '')[:4]
