@@ -7,6 +7,11 @@ except ImportError:
 import unittest
 from pprint import pprint
 
+try:
+    from urlparse import parse_qs
+except ImportError:
+    from cgi import parse_qs
+
 from bibjsontools import from_openurl, to_openurl, OpenURLParser
 
 class TestFromOpenURL(unittest.TestCase):
@@ -156,9 +161,31 @@ class TestFromOpenURL(unittest.TestCase):
         b = from_openurl(q)
         self.assertEqual(b['type'], 'article')
         
+    def test_book_chapter(self):
+        q = u'genre=bookitem&isbn=9780470096222&title=Handbook+of+counseling+psychology+(4th+ed.).&volume=&issue=&date=20080101&atitle=The+importance+of+treatment+and+the+science+of+common+factors+in+psychotherapy.&spage=249&pages=249-266&sid=EBSCO:PsycINFO&aulast=Imel%2c+Zac+E.'
+        b = from_openurl(q)
+        self.assertEqual(b['type'], 'inbook')
+        
+        q = u'sid=info:sid/sersol:RefinerQuery&genre=bookitem&isbn=9781402032899&&title=The+roots+of+educational+change&atitle=Finding+Keys+to+School+Change%3A+A+40-Year+Odyssey&volume=&part=&issue=&date=2005&spage=25&epage=57&aulast=Miles&aufirst=Matthew'
+        b = from_openurl(q)
+        self.assertEqual(b['type'], 'inbook')
+        
+
+class TestToOpenURL(unittest.TestCase):
+    
+    def test_book_chapter(self):
+        q = u'sid=info:sid/sersol:RefinerQuery&genre=bookitem&isbn=9781402032899&&title=The+roots+of+educational+change&atitle=Finding+Keys+to+School+Change%3A+A+40-Year+Odyssey&volume=&part=&issue=&date=2005&spage=25&epage=57&aulast=Miles&aufirst=Matthew'
+        b = from_openurl(q)
+        ourl = to_openurl(b)
+        qdict = parse_qs(ourl)
+        self.assertTrue('bookitem' in qdict.get('rft.genre'))
+        
+          
 def suite():
     suite1 = unittest.makeSuite(TestFromOpenURL, 'test')
-    return suite1
+    suite2 = unittest.makeSuite(TestToOpenURL, 'test')
+    all = unittest.TestSuite((suite1, suite2))
+    return all
 
 if __name__ == '__main__':
     unittest.main()

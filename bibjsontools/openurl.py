@@ -5,7 +5,7 @@ Converting OpenURLs to BibJSON and back.
 import urllib
 try:
     from urlparse import parse_qs
-except:
+except ImportError:
     from cgi import parse_qs
 import sys
 try:
@@ -350,7 +350,7 @@ class BibJSONToOpenURL(object):
             out['rft.jtitle'] = jrnl.get('name', '')
             out['rft.stitle'] = jrnl.get('shortcode')
             out['rft.genre'] = 'article'
-        elif (btype == 'book') or (btype == 'bookitem'):
+        elif (btype == 'book') or (btype == 'inbook'):
             out['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:book'
             out['rft.btitle'] = title
             out['rft.genre'] = 'book'
