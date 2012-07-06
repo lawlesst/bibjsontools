@@ -143,11 +143,15 @@ class OpenURLParser(object):
                     out.append(d)
         #ISBNS and ISSNs are more straightforward so will handle them separately.
         for isbn in self._find_repeating_key(['rft.isbn', 'isbn']):
-            out.append({'type': 'isbn',
-                        'id': isbn})
+            #These are repated on occassion
+            for isn in isbn.split():
+                out.append({'type': 'isbn',
+                            'id': isn})
         for issn in self._find_repeating_key(['rft.issn', 'issn']):
-            out.append({'type': 'issn',
-                        'id': issn})
+            #These are repated on occassion
+            for isn in issn.split():
+                out.append({'type': 'issn',
+                            'id': isn})
         for eissn in self._find_repeating_key(['rft.eissn', 'eissn']):
             out.append({'type': 'eissn',
                         'id': issn})
