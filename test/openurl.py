@@ -170,6 +170,16 @@ class TestFromOpenURL(unittest.TestCase):
         b = from_openurl(q)
         self.assertEqual(b['type'], 'inbook')
         
+    def test_multiple_isbn(self):
+        q = u'rft.pub=Univ+Of+Mass+Press&rft_val_fmt=info%3Aofi/fmt%3Akev%3Amtx%3Abook&rfr_id=info%3Asid/info%3Asid/zotero.org%3A2&rft.au=Jackson%2C+John&rft.place=%5BS.l.%5D&rft.date=1980&rft.btitle=Necessity+for+ruins%2C+and+other+topics.&rft.isbn=0870232924+9780870232923&ctx_ver=Z39.88-2004&rft.genre=book'
+        b = from_openurl(q)
+        self.assertTrue({'type': 'isbn', 'id': '9780870232923'} in b['identifier'])
+    
+    def test_multiple_issn(self):
+        q = u'rft.pub=Univ+Of+Mass+Press&r&rft.jtitle=Test&rft.issn=555+123&rft.genre=article'
+        b = from_openurl(q)
+        self.assertTrue({'type': 'issn', 'id': '555'} in b['identifier'])
+       
 
 class TestToOpenURL(unittest.TestCase):
     
