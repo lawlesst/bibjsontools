@@ -196,7 +196,6 @@ class OpenURLParser(object):
     def authors(self):
         """
         Pull authors.  Less straightforward than you might think.  
-        For now, we won't worry about first and last names.
         """
         out = []
         authors = self._find_key_values([
