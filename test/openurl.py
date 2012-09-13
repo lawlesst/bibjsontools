@@ -169,6 +169,19 @@ class TestFromOpenURL(unittest.TestCase):
         q = u'sid=info:sid/sersol:RefinerQuery&genre=bookitem&isbn=9781402032899&&title=The+roots+of+educational+change&atitle=Finding+Keys+to+School+Change%3A+A+40-Year+Odyssey&volume=&part=&issue=&date=2005&spage=25&epage=57&aulast=Miles&aufirst=Matthew'
         b = from_openurl(q)
         self.assertEqual(b['type'], 'inbook')
+        #Real request that was being returned as a book - 9/13/12
+        q = u'url_ver=Z39.88-2004&rft_val_fmt=info:ofi/fmt:kev:mtx:book&rft.genre=bookitem&rft.btitle=The Corsini Encyclopedia of Psychology&rft.atitle=Minnesota Multiphasic Personality Inventory&rft.date=2010-01-30&rfr_id=info:sid/wiley.com:OnlineLibrary'
+        b = from_openurl(q)
+        op = OpenURLParser(q)
+        genre = op._find_key(['rft.genre', 'genre'])
+        format = op._find_key(['rft_val_fmt'])
+        #Check that the OpenURL pairs are parsed properly
+        self.assertEqual(genre, 'bookitem')
+        self.assertTrue(format.rindex('book') > 0)
+        #Now look at the bibj itself.
+        self.assertEqual(b['type'], 'inbook')
+        self.assertEqual(b['title'], u'Minnesota Multiphasic Personality Inventory')
+        self.assertEqual(b['journal']['name'], u'The Corsini Encyclopedia of Psychology')
         
     def test_multiple_isbn(self):
         q = u'rft.pub=Univ+Of+Mass+Press&rft_val_fmt=info%3Aofi/fmt%3Akev%3Amtx%3Abook&rfr_id=info%3Asid/info%3Asid/zotero.org%3A2&rft.au=Jackson%2C+John&rft.place=%5BS.l.%5D&rft.date=1980&rft.btitle=Necessity+for+ruins%2C+and+other+topics.&rft.isbn=0870232924+9780870232923&ctx_ver=Z39.88-2004&rft.genre=book'
@@ -192,6 +205,7 @@ class TestToOpenURL(unittest.TestCase):
         ourl = to_openurl(b)
         qdict = parse_qs(ourl)
         self.assertTrue('bookitem' in qdict.get('rft.genre'))
+
         
           
 def suite():

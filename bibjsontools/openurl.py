@@ -73,10 +73,12 @@ class OpenURLParser(object):
         btype = 'book'
         genre = self._find_key(['rft.genre', 'genre'])
         format = self._find_key(['rft_val_fmt'])
+
         if format:
             if 'journal' in format:
                 return 'article'
-            if 'book' in format:
+            #Make sure genre isn't book chapter befor returning book
+            if ('book' in format) and (genre != 'bookitem'):
                 return 'book'
         if genre:
             if genre == 'bookitem':
