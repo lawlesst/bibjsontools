@@ -267,7 +267,6 @@ class OpenURLParser(object):
         #try the usual suspects
         r = self._find_key(['rfr_id', 'sid', 'id'])
         if r:
-            
             return r
 
 
