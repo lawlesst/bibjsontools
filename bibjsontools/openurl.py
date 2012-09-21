@@ -192,7 +192,7 @@ class OpenURLParser(object):
                     ti['shortcode'] = stitle[0] 
                 out['journal'] = ti
         return out
-
+        
     def authors(self):
         """
         Pull authors.  Less straightforward than you might think.  
@@ -202,7 +202,9 @@ class OpenURLParser(object):
                                         'rft.au',
                                         'au',
                                         'rft.aulast',
-                                        'aulast'])
+                                        'aulast',
+                                        'rft.auinitm',
+                                        'auinitm'])
         for k,values in authors:
             for v in values:
                 if (k == 'rft.au') or (k == 'au') or\
@@ -218,8 +220,10 @@ class OpenURLParser(object):
                     aufirst = self._find_key(['rft.aufirst', 'aufirst'])
                     if aufirst:
                         au['firstname'] = aufirst
-                    
-                    #Put the full name together now if we can. 
+                    auinitm = self._find_key( ['rft.auinitm', 'auinitm'] )
+                    if auinitm:
+                        au['_minitial'] = auinitm         
+                    #Put the full name (minus middlename) together now if we can. 
                     if not au.has_key('name'):
                         #If there isn't a first and last name, just use last.
                         last = au.get('lastname', '')
@@ -230,6 +234,44 @@ class OpenURLParser(object):
                     if au not in out:
                         out.append(au)
         return out
+
+    # def authors(self):
+    #     """
+    #     Pull authors.  Less straightforward than you might think.  
+    #     """
+    #     out = []
+    #     authors = self._find_key_values([
+    #                                     'rft.au',
+    #                                     'au',
+    #                                     'rft.aulast',
+    #                                     'aulast'])
+    #     for k,values in authors:
+    #         for v in values:
+    #             if (k == 'rft.au') or (k == 'au') or\
+    #                 (k == 'rft.aulast') or (k == 'aulast'):
+    #                 #If it's a full name, set here.  
+    #                 if (k == 'rft.au') or (k == 'au'): 
+    #                     au = {'name': v}
+    #                 else:
+    #                     au = {}
+    #                 aulast = self._find_key(['rft.aulast', 'aulast'])
+    #                 if aulast:
+    #                     au['lastname'] = aulast
+    #                 aufirst = self._find_key(['rft.aufirst', 'aufirst'])
+    #                 if aufirst:
+    #                     au['firstname'] = aufirst
+    #                 
+    #                 #Put the full name together now if we can. 
+    #                 if not au.has_key('name'):
+    #                     #If there isn't a first and last name, just use last.
+    #                     last = au.get('lastname', '')
+    #                     first = au.get('firstname', '')
+    #                     name = "%s, %s" % (last, first.strip())
+    #                     au['name'] = name.rstrip(', ')
+    #                 #Don't duplicate authors
+    #                 if au not in out:
+    #                     out.append(au)
+    #     return out
 
     def pages(self):
         """
