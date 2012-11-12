@@ -12,7 +12,10 @@ try:
 except ImportError:
     from cgi import parse_qs
 
-from bibjsontools import from_openurl, to_openurl, OpenURLParser
+from bibjsontools import from_openurl
+from bibjsontools import from_dict
+from bibjsontools import to_openurl
+from bibjsontools import OpenURLParser
 
 class TestFromOpenURL(unittest.TestCase):
     
@@ -214,13 +217,24 @@ class TestToOpenURL(unittest.TestCase):
         self.assertTrue('bookitem' in qdict.get('rft.genre'))
 
     def test_missing_title(self):
-        q = u'rft_val_fmt=info:ofi/fmt:kev:mtx:book&rft.genre=bookitem&rft.btitle=Our Weirdness Is Free: The logic of Anonymous — online army, agent of chaos, and seeker of justice&rft.atitle=&rft.aulast=Coleman&rft.aufirst=Gabriella&rft.au=Coleman,&#32;Gabriella&rft.pub=Triple Canopy&rft_id=http://canopycanopycanopy.com/15/our_weirdness_is_free&url_ver=Z39.88-2004&rfr_id=info:sid/libx:brown'
-        b = from_openurl(q)
+        #Mock a sample request dict coming from Django.
+        request_dict = {
+        'rft.pub': [u'Triple Canopy'],
+        'rft_val_fmt': [u'info:ofi/fmt:kev:mtx:book'],
+        'rfr_id': [u'info:sid/libx:brown'],
+        'rft.au': [u'Coleman,&#32;Gabriella'],
+        'rft.aulast': [u'Coleman'],
+        'rft.aufirst': [u'Gabriella'],
+        'rft_id': [u'http://canopycanopycanopy.com/15/our_weirdness_is_free'],
+        'rft.btitle': [u'Our Weirdness Is Free: The logic of Anonymous \u2014 online army, agent of chaos, and seeker of justice'],
+        'url_ver': [u'Z39.88-2004'],
+        'rft.atitle': [u''],
+        'rft.genre': [u'bookitem']}
+        b = from_dict(request_dict)
         ourl = to_openurl(b)
-        qdict = parse_qs(ourl)
-        pprint(qdict)
-        self.assertTrue('bookitem' in qdict.get('rft.genre'))
-        self.assertTrue('Coleman, Gabriella' in qdict.get('rft.au'))
+        parsed_ourl = parse_qs(ourl)
+        self.assertTrue('bookitem' in parsed_ourl.get('rft.genre'))
+        self.assertTrue('Coleman, Gabriella' in parsed_ourl.get('rft.au'))
 
         
           
@@ -232,3 +246,5 @@ def suite():
 
 if __name__ == '__main__':
     unittest.main()
+
+

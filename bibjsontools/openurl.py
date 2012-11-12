@@ -368,7 +368,7 @@ class BibJSONToOpenURL(object):
                 out['rft.btitle'] = jrnl.get('name')
                 #For Illiad add as title
                 out['title'] = jrnl.get('name')
-                out['rft.atitle'] = bib['title']
+                out['rft.atitle'] = bib.get('title', 'unknown')
         else:
             #Try to fill in a title for unkowns
             out['rft.genre'] = 'unknown'
