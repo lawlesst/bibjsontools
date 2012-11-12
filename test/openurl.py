@@ -198,13 +198,11 @@ class TestFromOpenURL(unittest.TestCase):
         
     def test_author(self):
         q = u'sid=FirstSearch%3AWorldCat&genre=book&isbn=9780393066005&title=The+annotated+Peter+Pan&date=2011&aulast=Barrie&aufirst=J&auinitm=M&id=doi%3A&pid=%3Caccession+number%3E711051770%3C%2Faccession+number%3E%3Cfssessid%3E0%3C%2Ffssessid%3E%3Cedition%3E1st+ed.%2C+Centennial+ed.%3C%2Fedition%3E&url_ver=Z39.88-2004&rfr_id=info%3Asid%2Ffirstsearch.oclc.org%3AWorldCat&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&req_dat=%3Csessionid%3E0%3C%2Fsessionid%3E&rfe_dat=%3Caccessionnumber%3E711051770%3C%2Faccessionnumber%3E&rft_id=info%3Aoclcnum%2F711051770&rft_id=urn%3AISBN%3A9780393066005&rft.aulast=Barrie&rft.aufirst=J&rft.auinitm=M&rft.btitle=The+annotated+Peter+Pan&rft.date=2011&rft.isbn=9780393066005&rft.place=New+York&rft.pub=W.+W.+Norton+%26+Co.&rft.edition=1st+ed.%2C+Centennial+ed.&rft.genre=book&checksum=af5445c9c9a23c5e4fdbe11393dba00a'
-        b = from_openurl( q )
-        self.assertEqual( b['author'][0]['firstname'], u'J' ); self.assertEqual( type(b['author'][0]['firstname']), unicode )
-        self.assertEqual( b['author'][0]['lastname'], u'Barrie' ); self.assertEqual( type(b['author'][0]['lastname']), unicode )
-        self.assertEqual( b['author'][0]['name'], u'Barrie, J' ); self.assertEqual( type(b['author'][0]['name']), unicode )
-        self.assertEqual( b['author'][0]['_minitial'], u'M' ); self.assertEqual( type(b['author'][0]['_minitial']), unicode )
-
-
+        b = from_openurl(q)
+        self.assertEqual(b['author'][0]['firstname'], u'J' ); self.assertEqual( type(b['author'][0]['firstname']), unicode)
+        self.assertEqual(b['author'][0]['lastname'], u'Barrie' ); self.assertEqual( type(b['author'][0]['lastname']), unicode)
+        self.assertEqual(b['author'][0]['name'], u'Barrie, J' ); self.assertEqual( type(b['author'][0]['name']), unicode)
+        self.assertEqual(b['author'][0]['_minitial'], u'M' ); self.assertEqual( type(b['author'][0]['_minitial']), unicode)
 
 class TestToOpenURL(unittest.TestCase):
     
@@ -214,6 +212,15 @@ class TestToOpenURL(unittest.TestCase):
         ourl = to_openurl(b)
         qdict = parse_qs(ourl)
         self.assertTrue('bookitem' in qdict.get('rft.genre'))
+
+    def test_missing_title(self):
+        q = u'rft_val_fmt=info:ofi/fmt:kev:mtx:book&rft.genre=bookitem&rft.btitle=Our Weirdness Is Free: The logic of Anonymous — online army, agent of chaos, and seeker of justice&rft.atitle=&rft.aulast=Coleman&rft.aufirst=Gabriella&rft.au=Coleman,&#32;Gabriella&rft.pub=Triple Canopy&rft_id=http://canopycanopycanopy.com/15/our_weirdness_is_free&url_ver=Z39.88-2004&rfr_id=info:sid/libx:brown'
+        b = from_openurl(q)
+        ourl = to_openurl(b)
+        qdict = parse_qs(ourl)
+        pprint(qdict)
+        self.assertTrue('bookitem' in qdict.get('rft.genre'))
+        self.assertTrue('Coleman, Gabriella' in qdict.get('rft.au'))
 
         
           
