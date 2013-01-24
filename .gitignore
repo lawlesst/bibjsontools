@@ -4,7 +4,7 @@ bibj.py
 .project
 .pydevproject
 to_bibjson.py
-
+.settings
 *.py[co]
 
 # Packages
