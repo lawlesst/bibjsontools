@@ -236,12 +236,27 @@ class TestToOpenURL(unittest.TestCase):
         self.assertTrue('bookitem' in parsed_ourl.get('rft.genre'))
         self.assertTrue('Coleman, Gabriella' in parsed_ourl.get('rft.au'))
 
-        
-          
+class TestFromDict(unittest.TestCase):
+    def test_throws_key_error(self):
+        qdict = {u'rfr_id': [u'info:sid/libx'],
+                 u'rft.atitle': [u''],
+                 u'rft.au': [u'Coleman,&#32;Gabriella'],
+                 u'rft.aufirst': [u'Gabriella'],
+                 u'rft.aulast': [u'Coleman'],
+                 u'rft.btitle': [u'Our Weirdness Is Free: The logic of Anonymous \\u2014 online army, agent of chaos, and seeker of justice'],
+                 u'rft.genre': [u'bookitem'],
+                 u'rft.pub': [u'Triple Canopy'],
+                 u'rft_id': [u'http://canopycanopycanopy.com/15/our_weirdness_is_free'],
+                 u'rft_val_fmt': [u'info:ofi/fmt:kev:mtx:book'],
+                 u'url_ver': [u'Z39.88-2004']}
+        b = from_dict(qdict)
+        self.assertEqual(b['title'], 'Unknown') 
+
 def suite():
     suite1 = unittest.makeSuite(TestFromOpenURL, 'test')
     suite2 = unittest.makeSuite(TestToOpenURL, 'test')
-    all = unittest.TestSuite((suite1, suite2))
+    suite3 = unittest.makeSuite(TestFromDict, 'test')
+    all = unittest.TestSuite((suite1, suite2, suite3))
     return all
 
 if __name__ == '__main__':

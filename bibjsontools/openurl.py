@@ -13,6 +13,9 @@ try:
 except ImportError:
     import simplejson as json
 
+#List of keys that should be present in any bibjson object.
+REQUIRED_KEYS = ['title']
+
 
 class OpenURLParser(object):
 
@@ -301,10 +304,14 @@ class OpenURLParser(object):
             d['year'] = year[:4]
         #Pages
         d.update(self.pages())
-        #Remove empty keys
+        #Remove empty keys - except those in the required keys list.
         for k,v in d.items():
             if not v:
-                del d[k]
+                if k in REQUIRED_KEYS:
+                    #Set to unknown
+                    d[k] = u'Unknown'
+                else:
+                    del d[k]
         #add the original openurl
         d['_openurl'] = BibJSONToOpenURL(d).parse()
         return d
