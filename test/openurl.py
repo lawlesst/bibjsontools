@@ -207,6 +207,12 @@ class TestFromOpenURL(unittest.TestCase):
         self.assertEqual(b['author'][0]['name'], u'Barrie, J' ); self.assertEqual( type(b['author'][0]['name']), unicode)
         self.assertEqual(b['author'][0]['_minitial'], u'M' ); self.assertEqual( type(b['author'][0]['_minitial']), unicode)
 
+    def test_eissn(self):
+        q = u'eissn=15414159&date=2010-01-01&pages=125-141'
+        b = from_openurl(q)
+        self.assertTrue({'type': 'eissn', 'id': '15414159'} in b['identifier'])
+        self.assertEqual(b['pages'], '125-141')
+
 class TestToOpenURL(unittest.TestCase):
     
     def test_book_chapter(self):

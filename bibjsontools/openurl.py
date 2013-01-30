@@ -159,7 +159,7 @@ class OpenURLParser(object):
                             'id': isn})
         for eissn in self._find_repeating_key(['rft.eissn', 'eissn']):
             out.append({'type': 'eissn',
-                        'id': issn})
+                        'id': eissn})
         #OCLCs
         oclc = pull_oclc(self.data)
         if (oclc) and (oclc not in out):
