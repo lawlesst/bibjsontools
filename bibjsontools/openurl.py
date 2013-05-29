@@ -124,6 +124,9 @@ class OpenURLParser(object):
                         #referent['doi'] = v.lstrip('info:doi/')
                         d['type'] = 'doi'
                         d['id'] = "doi:%s" % v.lstrip('info:doi/')
+                    elif v.startswith('doi:'):
+                        d['type'] = 'doi'
+                        d['id'] = "%s" % v
                     elif v.startswith('info:pmid/'):
                         d['type'] = 'pmid'
                         d['id'] = v

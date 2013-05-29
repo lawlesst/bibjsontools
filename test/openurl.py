@@ -213,6 +213,16 @@ class TestFromOpenURL(unittest.TestCase):
         self.assertTrue({'type': 'eissn', 'id': '15414159'} in b['identifier'])
         self.assertEqual(b['pages'], '125-141')
 
+    def test_scholar_doi(self):
+        q = u'sid=google&auinit=S&aulast=Maffeis&atitle=An+operational+semantics+for+JavaScript&id=doi:10.1007/978-3-540-89330-1_22'
+        b = from_openurl(q)
+        self.assertTrue(
+            {
+            'type': 'doi', 'id': 'doi:10.1007/978-3-540-89330-1_22'
+            } in b['identifier']
+        )
+
+
 class TestToOpenURL(unittest.TestCase):
     
     def test_book_chapter(self):
