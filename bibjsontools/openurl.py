@@ -413,7 +413,7 @@ class BibJSONToOpenURL(object):
             elif idt['type'] == 'isbn':
                 out['rft.isbn'] = idt['id']
             elif idt['type'] == 'eissn':
-                out['rfit.eissn'] = idt['id']
+                out['rft.eissn'] = idt['id']
             elif idt['type'] == 'doi':
                 out['rft_id'] = 'info:doi/%s' % idt['id'].strip('doi:')
             elif idt['type'] == 'pmid':
