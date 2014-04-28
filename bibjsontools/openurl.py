@@ -7,11 +7,6 @@ try:
     from urlparse import parse_qs
 except ImportError:
     from cgi import parse_qs
-import sys
-try:
-    import json
-except ImportError:
-    import simplejson as json
 
 #List of keys that should be present in any bibjson object.
 REQUIRED_KEYS = ['title']
