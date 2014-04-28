@@ -72,7 +72,7 @@ class OpenURLParser(object):
         """
         Determine the type of citation.  Defaults to book.
         """
-        #Defaulting to type of book.  
+        #Defaulting to type of book.
         btype = 'book'
         genre = self._find_key(['rft.genre', 'genre'])
         format = self._find_key(['rft_val_fmt'])
@@ -172,14 +172,20 @@ class OpenURLParser(object):
     def titles(self):
         out = {}
         #Article or book titles will be set to bibjson title.
-        out['title'] = self._find_key(['rft.atitle',
-                                       'atitle',
-                                       'rft.btitle',
-                                       'btitle'])
-        #Book titles and unknowns could also be in title 
-        if (not out['title']) and (self.type == 'book' or self.type == 'unknown'):
-            out['title'] = self._find_key(['rft.title',
-                                            'title'])
+        #These are in order of prefernce, short titles are last.
+        out['title'] = self._find_key(
+            [
+                'rft.atitle',
+                'atitle',
+                'rft.btitle',
+                'btitle',
+                'rft.title',
+                'title',
+                #Abbreviated or short journal title. This is used for journal title abbreviations, where known, i.e. "J Am Med Assn"
+                'stitle',
+                'rft.stitle'
+            ]
+        )
         #Journal title
         if self.type in ['article', 'inbook']:
             jtitle = self._find_key(['rft.jtitle',
@@ -193,15 +199,15 @@ class OpenURLParser(object):
                 #Try to pull short title code.
                 stitle = self.data.get('rft.stitle', None)
                 if not stitle:
-                    stitle = self.data.get('stitle', None) 
+                    stitle = self.data.get('stitle', None)
                 if stitle:
-                    ti['shortcode'] = stitle[0] 
+                    ti['shortcode'] = stitle[0]
                 out['journal'] = ti
         return out
-        
+
     def authors(self):
         """
-        Pull authors.  Less straightforward than you might think.  
+        Pull authors.  Less straightforward than you might think.
         """
         out = []
         authors = self._find_key_values([
@@ -215,8 +221,8 @@ class OpenURLParser(object):
             for v in values:
                 if (k == 'rft.au') or (k == 'au') or\
                     (k == 'rft.aulast') or (k == 'aulast'):
-                    #If it's a full name, set here.  
-                    if (k == 'rft.au') or (k == 'au'): 
+                    #If it's a full name, set here.
+                    if (k == 'rft.au') or (k == 'au'):
                         au = {'name': v}
                     else:
                         au = {}
@@ -228,8 +234,8 @@ class OpenURLParser(object):
                         au['firstname'] = aufirst
                     auinitm = self._find_key( ['rft.auinitm', 'auinitm'] )
                     if auinitm:
-                        au['_minitial'] = auinitm         
-                    #Put the full name (minus middlename) together now if we can. 
+                        au['_minitial'] = auinitm
+                    #Put the full name (minus middlename) together now if we can.
                     if not au.has_key('name'):
                         #If there isn't a first and last name, just use last.
                         last = au.get('lastname', '')
@@ -269,7 +275,7 @@ class OpenURLParser(object):
         out['start_page'] = start
 
         return out
-    
+
     def rfr(self):
         """
         Get the referring site.
@@ -318,7 +324,7 @@ class OpenURLParser(object):
         #add the original openurl
         d['_openurl'] = BibJSONToOpenURL(d).parse()
         return d
-        
+
 def from_openurl(query):
     """
     Alias/shortcut to parse the provided query.
@@ -328,11 +334,11 @@ def from_openurl(query):
 
 def from_dict(request_dict):
     """
-    Alias/shortcut to handle dictionary inputs. 
+    Alias/shortcut to handle dictionary inputs.
     Use for this is passing Django request.GET as dict.
     """
     b = OpenURLParser('', query_dict=request_dict)
-    return b.parse() 
+    return b.parse()
 
 class BibJSONToOpenURL(object):
     def __init__(self, bibjson):
