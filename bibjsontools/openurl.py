@@ -88,6 +88,8 @@ class OpenURLParser(object):
                     return 'book'
                 elif 'article' in genre:
                     return 'article'
+                elif 'dissertation' in genre:
+                    return 'thesis'
         #Try to guess based on incoming values.
         elif self._find_key(['rft.atitle', 'atitle']):
             btype = 'article'

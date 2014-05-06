@@ -230,6 +230,14 @@ class TestFromOpenURL(unittest.TestCase):
         b = from_openurl(q)
         self.assertEqual(b['title'], u'Medical studies')
 
+    def test_dissertation(self):
+        #http://search.proquest.com/pqdtft/docview/1473656916/abstract
+        q = u'ctx_ver=Z39.88-2004&ctx_enc=info:ofi/enc:UTF-8&rfr_id=info:sid/ProQuest+Dissertations+%26+Theses+Full+Text&rft_val_fmt=info:ofi/fmt:kev:mtx:dissertation&rft.genre=dissertations+%26+theses&rft.jtitle=&rft.atitle=&rft.au=Mangla%2C+Akshay&rft.aulast=Mangla&rft.aufirst=Akshay&rft.date=2013-01-01&rft.volume=&rft.issue=&rft.spage=&rft.isbn=&rft.btitle=&rft.title=Rights+for+the+Voiceless%3A+The+State%2C+Civil+Society+and+Primary+Education+in+Rural+India&rft.issn=&rft_id=info:doi/'
+        b = from_openurl(q)
+        self.assertEqual(b['title'], u'Rights for the Voiceless: The State, Civil Society and Primary Education in Rural India')
+        self.assertEqual(b['type'], u'thesis')
+        self.assertEqual(b['author'][0]['name'], u'Mangla, Akshay')
+
 class TestToOpenURL(unittest.TestCase):
 
     def test_book_chapter(self):
