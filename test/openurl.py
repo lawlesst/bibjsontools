@@ -261,17 +261,15 @@ class TestThesisToOpenURL(unittest.TestCase):
         self.assertEqual(b['author'][0]['name'], u'Benjamin, Ruha')
         #ids
         ids = b['identifier']
-        self.assertIn(
+        self.assertTrue(
             {
             'type': 'isbn', 'id': u'9780549836568'
-            },
-            ids
+            } in ids
         )
-        self.assertNotIn(
+        self.assertTrue(
             {
             'type': 'doi', 'id': u'doi:\n'
-            },
-            ids
+            } not in ids
         )
 
 class TestToOpenURL(unittest.TestCase):
