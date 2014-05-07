@@ -257,15 +257,22 @@ class TestThesisToOpenURL(unittest.TestCase):
 ?ctx_ver=Z39.88-2004&ctx_enc=info:ofi/enc:UTF-8&rfr_id=info:sid/ProQuest+Dissertations+%26+Theses+Full+Text&rft_val_fmt=info:ofi/fmt:kev:mtx:dissertation&rft.genre=dissertations+%26+theses&rft.jtitle=&rft.atitle=&rft.au=Benjamin%2C+Ruha&rft.aulast=Benjamin&rft.aufirst=Ruha&rft.date=2008-01-01&rft.volume=&rft.issue=&rft.spage=&rft.isbn=9780549836568&rft.btitle=&rft.title=Culturing+consent%3A+Science+and+democracy+in+the+stem+cell+state&rft.issn=&rft_id=info:doi/
 """
         b = from_openurl(q)
+        self.assertEqual(b['type'], u'thesis')
         self.assertEqual(b['author'][0]['name'], u'Benjamin, Ruha')
         #ids
-        found = False
         ids = b['identifier']
-        for idt in ids:
-            if idt['type'] == 'isbn':
-                self.assertEqual(idt['id'], u'9780549836568')
-                found = True
-        self.assertTrue(found)
+        self.assertIn(
+            {
+            'type': 'isbn', 'id': u'9780549836568'
+            },
+            ids
+        )
+        self.assertNotIn(
+            {
+            'type': 'doi', 'id': u'doi:\n'
+            },
+            ids
+        )
 
 class TestToOpenURL(unittest.TestCase):
 

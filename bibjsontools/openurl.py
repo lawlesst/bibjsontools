@@ -112,6 +112,8 @@ class OpenURLParser(object):
                                      'rfe_dat'])
         for k, values in ids:
             for v in values:
+                #Remove line breaks from values.
+                v = v.replace('\n', '')
                 d = {}
                 d['id'] = None
                 d['type'] = None
