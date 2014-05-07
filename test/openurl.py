@@ -230,13 +230,42 @@ class TestFromOpenURL(unittest.TestCase):
         b = from_openurl(q)
         self.assertEqual(b['title'], u'Medical studies')
 
-    def test_dissertation(self):
+class TestThesisToOpenURL(unittest.TestCase):
+    """
+    Testing thesis and dissertations.  Pulled from logs May, 2014.
+    """
+
+    def test_a(self):
         #http://search.proquest.com/pqdtft/docview/1473656916/abstract
         q = u'ctx_ver=Z39.88-2004&ctx_enc=info:ofi/enc:UTF-8&rfr_id=info:sid/ProQuest+Dissertations+%26+Theses+Full+Text&rft_val_fmt=info:ofi/fmt:kev:mtx:dissertation&rft.genre=dissertations+%26+theses&rft.jtitle=&rft.atitle=&rft.au=Mangla%2C+Akshay&rft.aulast=Mangla&rft.aufirst=Akshay&rft.date=2013-01-01&rft.volume=&rft.issue=&rft.spage=&rft.isbn=&rft.btitle=&rft.title=Rights+for+the+Voiceless%3A+The+State%2C+Civil+Society+and+Primary+Education+in+Rural+India&rft.issn=&rft_id=info:doi/'
         b = from_openurl(q)
         self.assertEqual(b['title'], u'Rights for the Voiceless: The State, Civil Society and Primary Education in Rural India')
         self.assertEqual(b['type'], u'thesis')
         self.assertEqual(b['author'][0]['name'], u'Mangla, Akshay')
+
+    def test_b(self):
+        q = u"""
+?ctx_ver=Z39.88-2004&ctx_enc=info:ofi/enc:UTF-8&rfr_id=info:sid/ProQuest+Dissertations+%26+Theses+Full+Text&rft_val_fmt=info:ofi/fmt:kev:mtx:dissertation&rft.genre=dissertations+%26+theses&rft.jtitle=&rft.atitle=&rft.au=Grossman%2C+Robert+Allen&rft.aulast=Grossman&rft.aufirst=Robert&rft.date=1988-01-01&rft.volume=&rft.issue=&rft.spage=&rft.isbn=&rft.btitle=&rft.title=The+Lute+Suite+in+G+Minor+BWV+995+by+Johann+Sebastian+Bach%3A+A+comparison+of+the+autograph+manuscript+and+the+lute+intabulation+in+Leipzig%2C+Sammlung+Becker%2C+MS.+111.ii.3&rft.issn=&rft_id=info:doi/
+"""
+        b = from_openurl(q)
+        self.assertIn(u'Lute Suite in G Minor BWV 995 by Johann Sebastian Bach', b['title'])
+        self.assertEqual(b['type'], u'thesis')
+        self.assertEqual(b['year'], u'1988')
+
+    def test_c(self):
+        q = u"""
+?ctx_ver=Z39.88-2004&ctx_enc=info:ofi/enc:UTF-8&rfr_id=info:sid/ProQuest+Dissertations+%26+Theses+Full+Text&rft_val_fmt=info:ofi/fmt:kev:mtx:dissertation&rft.genre=dissertations+%26+theses&rft.jtitle=&rft.atitle=&rft.au=Benjamin%2C+Ruha&rft.aulast=Benjamin&rft.aufirst=Ruha&rft.date=2008-01-01&rft.volume=&rft.issue=&rft.spage=&rft.isbn=9780549836568&rft.btitle=&rft.title=Culturing+consent%3A+Science+and+democracy+in+the+stem+cell+state&rft.issn=&rft_id=info:doi/
+"""
+        b = from_openurl(q)
+        self.assertEqual(b['author'][0]['name'], u'Benjamin, Ruha')
+        #ids
+        found = False
+        ids = b['identifier']
+        for idt in ids:
+            if idt['type'] == 'isbn':
+                self.assertEqual(idt['id'], u'9780549836568')
+                found = True
+        self.assertTrue(found)
 
 class TestToOpenURL(unittest.TestCase):
 
@@ -287,7 +316,8 @@ def suite():
     suite1 = unittest.makeSuite(TestFromOpenURL, 'test')
     suite2 = unittest.makeSuite(TestToOpenURL, 'test')
     suite3 = unittest.makeSuite(TestFromDict, 'test')
-    all = unittest.TestSuite((suite1, suite2, suite3))
+    suite4 = unittest.makeSuite(TestThesisToOpenURL, 'test')
+    all = unittest.TestSuite((suite1, suite2, suite3, suite4))
     return all
 
 if __name__ == '__main__':
