@@ -311,6 +311,27 @@ class TestToOpenURL(unittest.TestCase):
         self.assertTrue('bookitem' in parsed_ourl.get('rft.genre'))
         self.assertTrue('Coleman, Gabriella' in parsed_ourl.get('rft.au'))
 
+    def test_dissertation(self):
+        request = {
+            u'ctx_enc': [u'info:ofi/enc:UTF-8'],
+            u'ctx_ver': [u'Z39.88-2004'],
+            u'rft.au': [u'Mangla, Akshay'],
+            u'rft.aufirst': [u'Akshay'],
+            u'rft.aulast': [u'Mangla'],
+            u'rft.date': [u'2013-01-01'],
+            u'rft.genre': [u'dissertations & theses'],
+            u'rft.title': [u'Rights for the Voiceless: The State, Civil Society and Primary Education in Rural India'],
+            u'rft_id': [u'info:doi/'],
+            u'rft_val_fmt': [u'info:ofi/fmt:kev:mtx:dissertation']
+        }
+        b = from_dict(request)
+        ourl = to_openurl(b)
+        parsed_ourl = parse_qs(ourl)
+        self.assertTrue('dissertation' in parsed_ourl.get('rft.genre'))
+        self.assertTrue('Rights for the Voiceless' in parsed_ourl.get('rft.title')[0])
+        self.assertTrue('Mangla, Akshay') in parsed_ourl.get('rft.au')
+        self.assertTrue('2013' in parsed_ourl.get('rft.date'))
+
 class TestFromDict(unittest.TestCase):
     def test_throws_key_error(self):
         qdict = {u'rfr_id': [u'info:sid/libx'],

@@ -388,6 +388,9 @@ class BibJSONToOpenURL(object):
                 #For Illiad add as title
                 out['title'] = jrnl.get('name')
                 out['rft.atitle'] = bib.get('title', 'unknown')
+        elif (btype == 'dissertation'):
+            out['rft.genre'] = 'dissertation'
+            out['rft.title'] = bib.get('title')
         else:
             #Try to fill in a title for unkowns
             out['rft.genre'] = 'unknown'
