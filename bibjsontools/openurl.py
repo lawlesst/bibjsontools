@@ -89,7 +89,7 @@ class OpenURLParser(object):
                 elif 'article' in genre:
                     return 'article'
                 elif 'dissertation' in genre:
-                    return 'thesis'
+                    return 'dissertation'
         #Try to guess based on incoming values.
         elif self._find_key(['rft.atitle', 'atitle']):
             btype = 'article'
@@ -114,6 +114,8 @@ class OpenURLParser(object):
             for v in values:
                 #Remove line breaks from values.
                 v = v.replace('\n', '')
+                if v == '':
+                    continue
                 d = {}
                 d['id'] = None
                 d['type'] = None
@@ -144,7 +146,9 @@ class OpenURLParser(object):
                 elif k == 'doi':
                     d['type'] = 'doi'
                     d['id'] = "doi:%s" % v
-
+                #Check for blank dois
+                if d['id'] == "doi:":
+                    continue
                 #If we found an id add it to the output.
                 if d['id']:
                     out.append(d)

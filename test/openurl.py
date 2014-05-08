@@ -240,7 +240,7 @@ class TestThesisToOpenURL(unittest.TestCase):
         q = u'ctx_ver=Z39.88-2004&ctx_enc=info:ofi/enc:UTF-8&rfr_id=info:sid/ProQuest+Dissertations+%26+Theses+Full+Text&rft_val_fmt=info:ofi/fmt:kev:mtx:dissertation&rft.genre=dissertations+%26+theses&rft.jtitle=&rft.atitle=&rft.au=Mangla%2C+Akshay&rft.aulast=Mangla&rft.aufirst=Akshay&rft.date=2013-01-01&rft.volume=&rft.issue=&rft.spage=&rft.isbn=&rft.btitle=&rft.title=Rights+for+the+Voiceless%3A+The+State%2C+Civil+Society+and+Primary+Education+in+Rural+India&rft.issn=&rft_id=info:doi/'
         b = from_openurl(q)
         self.assertEqual(b['title'], u'Rights for the Voiceless: The State, Civil Society and Primary Education in Rural India')
-        self.assertEqual(b['type'], u'thesis')
+        self.assertEqual(b['type'], u'dissertation')
         self.assertEqual(b['author'][0]['name'], u'Mangla, Akshay')
 
     def test_b(self):
@@ -249,7 +249,7 @@ class TestThesisToOpenURL(unittest.TestCase):
 """
         b = from_openurl(q)
         self.assertTrue(u'Lute Suite in G Minor BWV 995 by Johann Sebastian Bach' in b['title'])
-        self.assertEqual(b['type'], u'thesis')
+        self.assertEqual(b['type'], u'dissertation')
         self.assertEqual(b['year'], u'1988')
 
     def test_c(self):
@@ -257,7 +257,7 @@ class TestThesisToOpenURL(unittest.TestCase):
 ctx_ver=Z39.88-2004&rfr_id=info:sid/ProQuest+Dissertations+%26+Theses+Full+Text&rft_val_fmt=info:ofi/fmt:kev:mtx:dissertation&rft.genre=dissertations+%26+theses&rft.jtitle=&rft.atitle=&rft.au=Benjamin%2C+Ruha&rft.aulast=Benjamin&rft.aufirst=Ruha&rft.date=2008-01-01&rft.volume=&rft.issue=&rft.spage=&rft.isbn=9780549836568&rft.btitle=&rft.title=Culturing+consent%3A+Science+and+democracy+in+the+stem+cell+state&rft.issn=&rft_id=info:doi/
 """
         b = from_openurl(q)
-        self.assertEqual(b['type'], u'thesis')
+        self.assertEqual(b['type'], u'dissertation')
         self.assertEqual(b['author'][0]['name'], u'Benjamin, Ruha')
         #ids
         ids = b['identifier']
@@ -271,6 +271,16 @@ ctx_ver=Z39.88-2004&rfr_id=info:sid/ProQuest+Dissertations+%26+Theses+Full+Text&
             'type': 'doi', 'id': u'doi:\n'
             } not in ids
         )
+
+    def test_d(self):
+        q = u"""
+ctx_ver=Z39.88-2004&ctx_enc=info:ofi/enc:UTF-8&rfr_id=info:sid/ProQuest+Dissertations+%26+Theses+Full+Text&rft_val_fmt=info:ofi/fmt:kev:mtx:dissertation&rft.genre=dissertations+%26+theses&rft.jtitle=&rft.atitle=&rft.au=Ahuja%2C+Amit&rft.aulast=Ahuja&rft.aufirst=Amit&rft.date=2008-01-01&rft.volume=&rft.issue=&rft.spage=&rft.isbn=9780549979340&rft.btitle=&rft.title=Mobilizing+marginalized+citizens%3A+Ethnic+parties+without+ethnic+movements&rft.issn=&rft_id=info:doi/
+"""
+        b = from_openurl(q)
+        self.assertEqual(b['type'], u'dissertation')
+        self.assertEqual(b['author'][0]['name'], u'Ahuja, Amit')
+        self.assertEqual(b['title'], u'Mobilizing marginalized citizens: Ethnic parties without ethnic movements')
+        self.assertEqual(b['identifier'][0]['id'], u'9780549979340')
 
 class TestToOpenURL(unittest.TestCase):
 
