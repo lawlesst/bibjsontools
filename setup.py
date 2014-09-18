@@ -11,7 +11,7 @@ except ImportError:
 
 setup(
     name='bibjsontools',
-    version='0.2',
+    version='0.3',
     author='Ted Lawless',
     author_email='lawlesst@gmail.com',
     packages=find_packages(),
