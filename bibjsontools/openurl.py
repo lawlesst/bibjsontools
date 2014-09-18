@@ -381,7 +381,7 @@ class BibJSONToOpenURL(object):
             out['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:book'
             out['rft.btitle'] = title
             out['rft.genre'] = 'book'
-            if bib['type'] == 'inbook':
+            if btype == 'inbook':
                 out['rft.genre'] = 'bookitem'
                 jrnl = bib.get('journal', {})
                 out['rft.btitle'] = jrnl.get('name')
